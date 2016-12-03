@@ -1,0 +1,51 @@
+#!/bin/sh
+#
+# /etc/rc.d/rc.rambo
+#
+# Start/stop/restart the rambo daemon
+#
+# To make rambo start automatically at boot, make this
+# file executable:  chmod 755 /etc/rc.d/rc.rambo
+#
+
+
+# this is actually fully working now, thanks to the daemons proper signal handling.
+
+
+# change this to /usr/sbin/rambo when its a functional daemon.
+rambo_start() {
+  if [ -x ./rambo ]; then
+    echo "Starting rambo:  ./rambo"
+    ./rambo
+  else
+    echo "./rambo not found."
+  fi
+}
+
+rambo_stop() {
+  echo "Stopping rambo:  ./rambo"
+  killall rambo
+}
+
+rambo_restart() {
+  rambo_stop
+  sleep 2
+  rambo_start
+}
+
+case "$1" in
+'start')
+  rambo_start
+  ;;
+'stop')
+  rambo_stop
+  ;;
+'restart')
+  rambo_restart
+  ;;
+*)
+  # Default is "start", for backwards compatibility with previous
+  # Slackware versions.  This may change to a 'usage' error someday.
+  rambo_start
+esac
+
